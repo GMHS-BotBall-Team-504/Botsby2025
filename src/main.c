@@ -20,17 +20,21 @@ int turn_speed = 100; //used for turn function
 
 
 //servo values
-int realBase = 1024;
-int realArm = 1024;
+int startBase = 100;
+int startArm = 1946;
+
+const int foodBase = 1260; //was 1280
+const int foodArm = 1946;
+int openClaw = 300;
+int closeClaw = 860;
+int tacoClaw = 700;
+
+int realBase = foodBase;
+int realArm = foodArm;
 int realClaw = 1024;
 
-int foodBase = 1150; //was 1170
-int foodArm = 1850;
-int openClaw = 300;
-int closeClaw = 1390;
-
 int dropBase = 1400;
-int dropArm = 1400;
+int dropArm = 1406;
 
 //sensor values
 int tape = 2900; //black tape on ir sensors
@@ -55,70 +59,59 @@ int main()
     msleep(1000);
     startServos();
     printf("set");
+    //wait for light
     set_servos(foodBase, foodArm, openClaw, 2 );
-    collegeBotsby(speed, 30);
    
-     drive(1, speed, 32);
+   
+     drive(1, speed, 35);
     set_servos(foodBase, foodArm, closeClaw, 2);
     msleep(400); //picked up hot dog
     
     collegeBotsbyBack(speed, 30);
+    drive(-1, speed, 10);
     turn(-1, tSpeed, 1095);
-    drive(1, speed, 100);
-    turn(-1, tSpeed, 1095);
+    drive(1, speed, 50);
+    turn(-1, tSpeed, 1095/3);
     set_servos(dropBase, dropArm, openClaw, 2); //dropped off hot dog
     set_servos(foodBase, foodArm, openClaw, 2);
     disable_servos();    
-    drive(1, speed, 6); 
     
-    turn(-1, tSpeed, 1000);
-    collegeBotsby(speed, 40); //on bump line
-   
-      
-    drive(1, speed, 45);
+   turn(-1, tSpeed, 1095+1095/3+1095/3);
     collegeBotsby(speed, 30); //at vertical 1 facing left
     
     drive(1, speed, 15);
     turn(-1, tSpeed, 1095);
     collegeBotsby(speed, 20); //at horizontal black
-    drive(1, speed, 30);
+    drive(1, speed, 34); 
+    set_servos(foodBase, foodArm, tacoClaw, 2); //grabbed taco
     turn(-1, tSpeed, 50);
-    drive(1, speed, 3);
-    set_servos(foodBase, foodArm, closeClaw-150, 2); //grabbed taco
-    drive(-1, speed, 3);
+    drive(-1, speed, 10);
     turn(1, tSpeed, 50);
-
-    
-   // turn(-1, tSpeed, 200);
-    //drive(-1, speed, 5);
-   // turn(1, tSpeed, 200);
-    
+   
     collegeBotsbyBack(speed, 30);
     turn(-1, tSpeed, 1095);
-    drive(1, speed, 60);
+    drive(1, speed, 80);
     turn(-1, tSpeed, 870);
+    
     set_servos(dropBase, dropArm, openClaw, 2); //dropped off taco
-    
     set_servos(foodBase, foodArm, openClaw, 2);
-    collegeBotsbyBack(speed, 100);
-    drive(1, speed, 14); //ready to move back
-    turn(-1, tSpeed, 1095);
-    collegeBotsby(speed, 50);
-    drive(1, speed, 22);
-    turn(-1, tSpeed, 1095); 
-    collegeBotsby(speed, 60); //ready to grab
-    
-    drive(1, speed, 30);
-    turn(1, tSpeed, 300);
-    drive(1, speed, 5);
+    disable_servos();
+   
+    turn(1, tSpeed, 870);
+    turn(1, tSpeed, 1095); //facing up
+ 
+    drive(1, speed, 10); // Past horizontal
+    turn(1, tSpeed, 1095);
+    collegeBotsby(speed, 50); //at vertical 1, above horizontal
+   
+  	turn (-1, tSpeed, 1095/2); //facing burger
+    drive(1, speed, 40); //at burger
     set_servos(foodBase, foodArm, closeClaw, 2); //grabbed burger
-    drive(-1, speed, 5);
-    turn(-1, tSpeed, 300);
-    collegeBotsbyBack(speed, 50); //at horizontal black
-    
-    drive(-1, speed, 8);
-    turn(-1, tSpeed, 1095);
-    collegeBotsby(speed, 50);
+    drive(-1, speed, 45);
+    turn(1, tSpeed, 1095/2);
+    collegeBotsby(speed, 50); //at vertical black
+    turn(1, tSpeed, 1095*2); //facing down board
+   
     drive(1, speed, 80);
     collegeBotsby(speed, 50);
     drive(1, speed, 40);
@@ -343,11 +336,11 @@ void lineFollowLeft(int distance, const int correction){
 void startServos(){
 	enable_servos();
     //whatever you set the servo position to, change these to match
-    realBase = 1024;
-    realArm = 1024;
+    realBase = startBase;
+    realArm = startArm;
     realClaw = 1024;
-    set_servo_position(base, 1024);
-    set_servo_position(arm, 1024);
+    set_servo_position(base, startBase);
+    set_servo_position(arm, startArm);
     set_servo_position(claw, 1024);
     msleep(2000);
 
